@@ -13,6 +13,7 @@ pageextension 50001 "General Journal Batches ext" extends "General Journal Batch
                     Errortxt: label 'Solo puede existir una seccion habilitada para facturas pendientes';
                     GenJnlBatch: Record "Gen. Journal Batch";
                 begin
+                    //validacion para que solo sea un campo chequeado
                     GenJnlBatch.Reset();
                     GenJnlBatch.SetFilter("Journal Template Name", '<>%1', Rec."Journal Template Name");
                     GenJnlBatch.SetRange("Habilitar fact. pdtes recibir");
