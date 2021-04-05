@@ -7,4 +7,12 @@ codeunit 50001 Suscriptores
     begin
         GestionOrdeCompra.RealizaAsientoContableFactura(PurchaseLine, PurchRcptLine);
     end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforeInsertReceiptLine', '', false, false)]
+    local procedure OnBeforeInsertReceiptLine(PurchLine: Record "Purchase Line")
+    var
+        GestionOrdeCompra: Codeunit "Gestion Orden de Compra";
+    begin
+        GestionOrdeCompra.ValidarConfiguracion(PurchLine);
+    end;
 }
