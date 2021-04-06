@@ -10,7 +10,8 @@ codeunit 50000 "Gestion Orden de Compra"
         if (PurchaseLine.Type = PurchaseLine.Type::Item)
         or (PurchaseLine.Type = PurchaseLine.Type::Resource)
         then
-            InsertarLinea(PurchaseLine, PurchRcptLine);
+            if PurchaseLine."Qty. to Receive" > 0 then
+                InsertarLinea(PurchaseLine, PurchRcptLine);
     end;
 
     local procedure InsertarLinea(PurchaseLine: Record "Purchase Line"; PurchRcptLine: Record "Purch. Rcpt. Line")
