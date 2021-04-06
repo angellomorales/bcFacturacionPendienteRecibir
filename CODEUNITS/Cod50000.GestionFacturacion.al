@@ -17,8 +17,10 @@ codeunit 50000 "Gestion Orden de Compra"
     var
         GenJnlLine: Record "Gen. Journal Line";
         GenJnlBatch: Record "Gen. Journal Batch";
+        NoSeriesMgt: Codeunit NoSeriesManagement;
         Cuenta: Code[20];
         Contrapartida: Code[20];
+        Numdoc: Code[20];
     begin
         GenJnlBatch.SetRange("Habilitar fact. pdtes recibir", true);
         if GenJnlBatch.FindFirst() then begin
@@ -34,8 +36,10 @@ codeunit 50000 "Gestion Orden de Compra"
             GenJnlLine."Bal. Account No." := Contrapartida;
             GenJnlLine.Comment := 'factura parcial de la orden de compra: ' + PurchaseLine."Document No." + ' y albaran: ' + PurchRcptLine."Document No.";
             GenJnlLine.Insert(true);
-            // falta generar numero de documento automatico con acciones volver a numerar y agregra validacion para numeros de serie
+            Numdoc := NoSeriesMgt.DoGetNextNo(GenJnlBatch."No. Series", GenJnlLine."Posting Date", true, false);
+            GenJnlLine.Validate("Document No.", Numdoc);
             // falta poner ejecucion como cuando se registra
+            GenJnlLine.Modify(true);
         end;
 
     end;
