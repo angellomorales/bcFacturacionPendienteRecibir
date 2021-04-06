@@ -29,14 +29,13 @@ codeunit 50000 "Gestion Orden de Compra"
             GenJnlLine."Journal Batch Name" := GenJnlBatch.Name;
             GenJnlLine."Account Type" := GenJnlLine."Account Type"::"G/L Account";
             GenJnlLine."Account No." := Cuenta;
-            // GenJnlLine."Debit Amount" := PurchaseLine."Unit Cost" * PurchaseLine."Qty. to Receive";
             GenJnlLine.Validate("Debit Amount", PurchaseLine."Unit Cost" * PurchaseLine."Qty. to Receive");
             GenJnlLine."Bal. Account Type" := GenJnlLine."Account Type"::"G/L Account";
             GenJnlLine."Bal. Account No." := Contrapartida;
             GenJnlLine.Comment := 'factura parcial de la orden de compra: ' + PurchaseLine."Document No." + ' y albaran: ' + PurchRcptLine."Document No.";
             GenJnlLine.Insert(true);
-            //falta generar numero de documento automatico con acciones volver a numerar y agregra validacion para numeros de serie
-            //falta poner ejecucion como cuando se registra
+            // falta generar numero de documento automatico con acciones volver a numerar y agregra validacion para numeros de serie
+            // falta poner ejecucion como cuando se registra
         end;
 
     end;
@@ -57,33 +56,38 @@ codeunit 50000 "Gestion Orden de Compra"
     end;
 
     procedure ValidarConfiguracion(PurchaseLine: Record "Purchase Line")
-    var
-        erroMsg: Label 'verifique la configuracion de las cuentas de registro general';// si no debe tener, verifique la cuenta de contrapartida de la seccion de libros diario general activada';
     begin
         if (PurchaseLine.Type = PurchaseLine.Type::Item)
             or (PurchaseLine.Type = PurchaseLine.Type::Resource)
             then
             if not ValidarConfiguracionCuentas(PurchaseLine) then
-                Error(erroMsg);
+                exit;
     end;
 
     local procedure ValidarConfiguracionCuentas(PurchaseLine: Record "Purchase Line"): Boolean
     var
         GenJnlBatch: Record "Gen. Journal Batch";
         status: Boolean;
-        erroMsg: Label 'verifique que se encuentra seleccionada la casilla Habilitar para fact. pdtes recibir en las seccion de libros diario general';
+        erroMsg: Label 'verifique que en la configuracion de las cuentas de registro general tenga las cuentas debidamente asignadas';// si no debe tener, verifique la cuenta de contrapartida de la seccion de libros diario general activada';
+        erroMsg1: Label 'verifique la seccion de libros diario general activa tenga No Serie';
+        erroMsg2: Label 'verifique que se encuentra seleccionada la casilla Habilitar para fact. pdtes recibir en las seccion de libros diario general';
     begin
         status := false;
         GenJnlBatch.SetRange("Habilitar fact. pdtes recibir", true);
         if GenJnlBatch.FindFirst() then begin
-            if ValidarConfiguracionCuentasRegistroGeneral(PurchaseLine) then
-                status := true
-            // else
-            //     if GenJnlBatch."Bal. Account No." <> '' then
-            //         status := true;
+            if GenJnlBatch."No. Series" <> '' then begin
+                if ValidarConfiguracionCuentasRegistroGeneral(PurchaseLine) then
+                    status := true
+                else
+                    Error(erroMsg);
+                //     if GenJnlBatch."Bal. Account No." <> '' then
+                //         status := true;   
+            end
+            else
+                Error(erroMsg1);
         end
         else
-            Error(erroMsg);
+            Error(erroMsg2);
         exit(status);
     end;
 
