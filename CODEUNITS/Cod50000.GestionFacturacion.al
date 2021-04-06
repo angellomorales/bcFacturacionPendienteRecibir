@@ -38,8 +38,8 @@ codeunit 50000 "Gestion Orden de Compra"
             GenJnlLine.Insert(true);
             Numdoc := NoSeriesMgt.DoGetNextNo(GenJnlBatch."No. Series", GenJnlLine."Posting Date", true, false);
             GenJnlLine.Validate("Document No.", Numdoc);
-            // falta poner ejecucion como cuando se registra
             GenJnlLine.Modify(true);
+            CODEUNIT.Run(CODEUNIT::"Gen. Jnl.-Post Batch", GenJnlLine);
         end;
 
     end;
