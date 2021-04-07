@@ -15,4 +15,12 @@ codeunit 50001 Suscriptores
     begin
         GestionOrdeCompra.ValidarConfiguracion(PurchLine);
     end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforeCalcInvoice', '', false, false)]
+    local procedure OnBeforeCalcInvoice(PurchHeader: Record "Purchase Header")
+    var
+        GestionOrdeCompra: Codeunit "Gestion Orden de Compra";
+    begin
+        GestionOrdeCompra.ValidarNoFacturaUnica(PurchHeader);
+    end;
 }

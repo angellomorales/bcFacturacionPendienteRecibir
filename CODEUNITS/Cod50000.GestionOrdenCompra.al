@@ -112,4 +112,14 @@ codeunit 50000 "Gestion Orden de Compra"
                 status := true;
         exit(status);
     end;
+
+    procedure ValidarNoFacturaUnica(PurchHeader: Record "Purchase Header")
+    var
+        VendLedgEntry: Record "Vendor Ledger Entry";
+        erroMsg: Label 'Ya existe la compra %1 %2 para este proveedor.', Comment = '%1 = Document Type; %2 = Document No.';
+    begin
+        if PurchHeader."Vendor Invoice No." <> '' then
+            if PurchHeader.FindPostedDocumentWithSameExternalDocNo(VendLedgEntry, PurchHeader."Vendor Invoice No.") then
+                Error(erroMsg, VendLedgEntry."Document Type", VendLedgEntry."External Document No.");
+    end;
 }
