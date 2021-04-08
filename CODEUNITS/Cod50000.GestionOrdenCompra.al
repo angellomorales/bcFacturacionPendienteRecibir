@@ -25,6 +25,8 @@ codeunit 50000 "Gestion Orden de Compra"
     begin
         GenJnlBatch.SetRange("Habilitar fact. pdtes recibir", true);
         if GenJnlBatch.FindFirst() then begin
+            if not validarCuentaActiva(PurchaseLine) then
+                exit;
             ObtenerCuentaYContrapartida(PurchaseLine, Cuenta, Contrapartida);
             GenJnlLine.Init();
             GenJnlLine."Posting Date" := WorkDate();
@@ -63,10 +65,10 @@ codeunit 50000 "Gestion Orden de Compra"
     procedure ValidarConfiguracion(PurchaseLine: Record "Purchase Line")
     begin
         if (PurchaseLine.Type = PurchaseLine.Type::Item)
-            or (PurchaseLine.Type = PurchaseLine.Type::Resource)
-            then
-            if not ValidarConfiguracionCuentas(PurchaseLine) then
-                exit;
+        or (PurchaseLine.Type = PurchaseLine.Type::Resource)
+        then
+            ValidarConfiguracionCuentas(PurchaseLine);
+
     end;
 
     local procedure ValidarConfiguracionCuentas(PurchaseLine: Record "Purchase Line"): Boolean
@@ -90,9 +92,9 @@ codeunit 50000 "Gestion Orden de Compra"
             end
             else
                 Error(erroMsg1);
-        end
-        else
-            Error(erroMsg2);
+        end;
+        // else
+        //     Error(erroMsg2);
         exit(status);
     end;
 
@@ -105,10 +107,28 @@ codeunit 50000 "Gestion Orden de Compra"
         GenPostSetup.SetRange("Gen. Bus. Posting Group", PurchaseLine."Gen. Bus. Posting Group");
         GenPostSetup.SetRange("Gen. Prod. Posting Group", PurchaseLine."Gen. Prod. Posting Group");
         if GenPostSetup.FindFirst() then
-            if (GenPostSetup."Purch. Account" <> '')
-            and (GenPostSetup."Cta. compra pdtes recibir" <> '')
-            and (GenPostSetup."Cta. facturas pdtes recibir" <> '')
-            then
+            if GenPostSetup."Activar recibos pdte. fact." = true then begin
+                if (GenPostSetup."Purch. Account" <> '')
+                and (GenPostSetup."Cta. compra pdtes recibir" <> '')
+                and (GenPostSetup."Cta. facturas pdtes recibir" <> '')
+                then
+                    status := true;
+            end
+            else
+                status := true;
+        exit(status);
+    end;
+
+    local procedure validarCuentaActiva(PurchaseLine: Record "Purchase Line"): Boolean
+    var
+        GenPostSetup: Record "General Posting Setup";
+        status: Boolean;
+    begin
+        status := false;
+        GenPostSetup.SetRange("Gen. Bus. Posting Group", PurchaseLine."Gen. Bus. Posting Group");
+        GenPostSetup.SetRange("Gen. Prod. Posting Group", PurchaseLine."Gen. Prod. Posting Group");
+        if GenPostSetup.FindFirst() then
+            if GenPostSetup."Activar recibos pdte. fact." = true then
                 status := true;
         exit(status);
     end;
