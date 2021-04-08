@@ -14,15 +14,6 @@ pageextension 50000 "General Posting Setup ext" extends "General Posting Setup"
                 ApplicationArea = All;
                 ToolTip = 'Especifica el número de la cuenta contable para registrar transacciones de compra que están pendientes de recibir de pedidos ya recibidos con esta combinación específica de grupo contable de negocio y grupo contable de producto.';
             }
-            field("recibos pdte. fact. Activos"; Rec."Activar recibos pdte. fact.")
-            {
-                Caption = 'Funcion recibos pdtes. facturar activada';
-                ApplicationArea = All;
-                Editable = false;
-            }
-        }
-        addafter(ShowAllAccounts)
-        {
             field("Activar recibos pdte. fact."; Rec."Activar recibos pdte. fact.")
             {
                 ApplicationArea = All;
@@ -36,10 +27,25 @@ pageextension 50000 "General Posting Setup ext" extends "General Posting Setup"
                 begin
                     if (Rec."Activar recibos pdte. fact.") then
                         Message(AlertaConfCtaCompras + AlertaConfCtaFactPendRecibir + AlertaConfCtaComprasPendRecibir);
+                    validarFuncionActiva();
                 end;
             }
         }
+        addafter(ShowAllAccounts)
+        {
+            field(funcionFactPendRecibirActiva; funcionFactPendRecibirActiva)
+            {
+                Caption = 'Función recibos pdtes. facturar activada';
+                ApplicationArea = All;
+                Editable = false;
+            }
+        }
     }
+
+    trigger OnOpenPage()
+    begin
+        validarFuncionActiva();
+    end;
 
     trigger OnClosePage()
     var
@@ -48,7 +54,7 @@ pageextension 50000 "General Posting Setup ext" extends "General Posting Setup"
         Confirmacion: Boolean;
         GenPostSetup: Record "General Posting Setup";
     begin
-        if not ConfFuncionActivaEsOk() then begin
+        if not ConfiguracionFuncionActivaEsOk() then begin
             Confirmacion := Confirm(ErrorConf, true);
             if Confirmacion then
                 Page.Run(Page::"General Posting Setup")
@@ -63,7 +69,7 @@ pageextension 50000 "General Posting Setup ext" extends "General Posting Setup"
         end;
     end;
 
-    local procedure ConfFuncionActivaEsOk(): Boolean
+    local procedure ConfiguracionFuncionActivaEsOk(): Boolean
     var
         Ok: Boolean;
         GenPostSetup: Record "General Posting Setup";
@@ -85,4 +91,20 @@ pageextension 50000 "General Posting Setup ext" extends "General Posting Setup"
             until GenPostSetup.Next() = 0;
         exit(Ok);
     end;
+
+    local procedure validarFuncionActiva()
+    var
+        GenPostSetup: Record "General Posting Setup";
+    begin
+        GenPostSetup.SetRange("Activar recibos pdte. fact.", true);
+        CurrPage.Update();
+        if GenPostSetup.Findfirst() then
+            funcionFactPendRecibirActiva := true
+        else
+            funcionFactPendRecibirActiva := false;
+
+    end;
+
+    var
+        funcionFactPendRecibirActiva: Boolean;
 }
