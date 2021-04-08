@@ -19,6 +19,7 @@ pageextension 50000 "General Posting Setup ext" extends "General Posting Setup"
                 ApplicationArea = All;
                 Caption = ' Activar funcion de registra recibos pendientes por facturar';
                 ToolTip = 'Activar funcion registrar facturas pendientes en cuenta contable para la combinación específica de grupo contable de negocio y grupo contable de producto. ';
+                Editable = funcionFactPendRecibirActiva;
                 trigger OnValidate()
                 begin
                     if (Rec."Activar recibos pdte. fact.") then
@@ -88,14 +89,23 @@ pageextension 50000 "General Posting Setup ext" extends "General Posting Setup"
     local procedure validarFuncionActiva()
     var
         GenJnlTemplate: Record "Gen. Journal Template";
+        GenPostSetup: Record "General Posting Setup";
     begin
         GenJnlTemplate.Reset();
         GenJnlTemplate.SetRange("Habilitado fact. pdtes recibir", true);
         CurrPage.Update();
         if GenJnlTemplate.FindFirst() then
             funcionFactPendRecibirActiva := true
-        else
+        else begin
             funcionFactPendRecibirActiva := false;
+            GenPostSetup.Reset();
+            GenPostSetup.SetRange("Activar recibos pdte. fact.", true);
+            if GenPostSetup.FindSet() then
+                repeat
+                    GenPostSetup."Activar recibos pdte. fact." := false;
+                    GenPostSetup.Modify();
+                until GenPostSetup.Next() = 0;
+        end;
 
     end;
 
