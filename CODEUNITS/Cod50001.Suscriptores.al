@@ -23,4 +23,11 @@ codeunit 50001 Suscriptores
     begin
         GestionOrdeCompra.ValidarNoFacturaUnica(PurchHeader);
     end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnBeforeStartOrContinuePosting', '', false, false)]
+    local procedure OnBeforeStartOrContinuePosting(var NextEntryNo: Integer)
+    begin
+        Clear(NextEntryNo);
+        NextEntryNo := 0;
+    end;
 }
