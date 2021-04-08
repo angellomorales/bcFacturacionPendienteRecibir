@@ -32,11 +32,10 @@ pageextension 50002 "General Journal Templates ext" extends "General Journal Tem
         validarFuncionActiva();
     end;
 
-    // trigger OnClosePage()
-    // begin
-    //     if MensajeConfirmacion() then
-
-    // end;
+    trigger OnClosePage()
+    begin
+        AbrirConfigCuentas();
+    end;
 
     var
         funcionFactPendRecibirActiva: Boolean;
@@ -53,12 +52,18 @@ pageextension 50002 "General Journal Templates ext" extends "General Journal Tem
             funcionFactPendRecibirActiva := false;
     end;
 
-    local procedure MensajeConfirmacion(): Boolean
+    procedure AbrirConfigCuentas()
     var
         MessageConf: Label 'Tiene la Función recibos pdtes. facturar activada \\ Desea configurar las cuentas contables?';
         Confirmacion: Boolean;
+        GenJnlTemplate: Record "Gen. Journal Template";
     begin
-        Confirmacion := Confirm(MessageConf, true);
-        exit(Confirmacion);
+        GenJnlTemplate.Reset();
+        GenJnlTemplate.SetRange("Habilitado fact. pdtes recibir", true);
+        if GenJnlTemplate.FindFirst() then begin
+            Confirmacion := Confirm(MessageConf, true);
+            if Confirmacion then
+                Page.Run(Page::"General Posting Setup");
+        end;
     end;
 }
