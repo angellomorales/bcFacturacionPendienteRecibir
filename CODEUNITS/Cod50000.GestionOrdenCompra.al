@@ -87,14 +87,10 @@ codeunit 50000 "Gestion Orden de Compra"
                     status := true
                 else
                     Error(erroMsg);
-                //     if GenJnlBatch."Bal. Account No." <> '' then
-                //         status := true;   
             end
             else
                 Error(erroMsg1);
         end;
-        // else
-        //     Error(erroMsg2);
         exit(status);
     end;
 
