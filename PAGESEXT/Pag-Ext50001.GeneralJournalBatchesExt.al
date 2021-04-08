@@ -35,7 +35,7 @@ pageextension 50001 "General Journal Batches ext" extends "General Journal Batch
                     GenJnlTemplate.Reset();
                     GenJnlTemplate.Get(Rec."Journal Template Name");
                     GenJnlTemplate."Habilitado fact. pdtes recibir" := Rec."Habilitar fact. pdtes recibir";
-                    GenJnlTemplate.Modify();
+                    GenJnlTemplate.Modify(true);
                 end;
             }
         }
