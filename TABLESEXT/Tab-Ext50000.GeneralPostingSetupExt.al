@@ -16,6 +16,12 @@ tableextension 50000 "General Posting Setup ext" extends "General Posting Setup"
             TableRelation = "G/L Account";
             Editable = true;
         }
+        field(50002; "Activar recibos pdte. fact."; Boolean)
+        {
+            Caption = 'Activar registro recibos pdtes facturar';
+            DataClassification = AccountData;
+            Editable = true;
+        }
     }
 
 
