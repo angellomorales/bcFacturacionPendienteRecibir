@@ -32,6 +32,7 @@ pageextension 50000 "General Posting Setup ext" extends "General Posting Setup"
             field(funcionFactPendRecibirActiva; funcionFactPendRecibirActiva)
             {
                 Caption = 'Función recibos pdtes. facturar activada en sección de libros';
+                ToolTip = 'Especifica si esta habilitada la funcion para realizar acientos contables para facturas pendientes de recibir de pedidos ya recibidos.';
                 ApplicationArea = All;
                 Editable = false;
             }

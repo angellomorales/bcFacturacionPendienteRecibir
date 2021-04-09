@@ -22,7 +22,7 @@ pageextension 50002 "General Journal Templates ext" extends "General Journal Tem
             field("Habilitado fact. pdtes recibir"; Rec."Habilitado fact. pdtes recibir")
             {
                 ApplicationArea = All;
-                ToolTip = 'Especifica si tiene una sección habilitada para realizar acientos contables para facturas pendientes de recibir de pedidos ya recibidos.';
+                ToolTip = 'Especifica si función esta habilitada para realizar acientos contables para facturas pendientes de recibir de pedidos ya recibidos en la seccion señalada.';
                 Editable = false;
             }
         }
