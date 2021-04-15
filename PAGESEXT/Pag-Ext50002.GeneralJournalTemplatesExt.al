@@ -24,6 +24,7 @@ pageextension 50002 "General Journal Templates ext" extends "General Journal Tem
                 ApplicationArea = All;
                 ToolTip = 'Especifica si función esta habilitada para realizar acientos contables para facturas pendientes de recibir de pedidos ya recibidos en la seccion señalada.';
                 Editable = false;
+                Visible = false;
             }
         }
     }
