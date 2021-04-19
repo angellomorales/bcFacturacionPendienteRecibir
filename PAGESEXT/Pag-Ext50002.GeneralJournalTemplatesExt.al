@@ -19,7 +19,7 @@ pageextension 50002 "General Journal Templates ext" extends "General Journal Tem
         }
         addafter("Copy to Posted Jnl. Lines")
         {
-            field("Habilitado fact. pdtes recibir"; Rec."Habilitado fact. pdtes recibir")
+            field("FPR Activado"; Rec."FPR Activado")
             {
                 ApplicationArea = All;
                 ToolTip = 'Especifica si función esta habilitada para realizar acientos contables para facturas pendientes de recibir de pedidos ya recibidos en la seccion señalada.';
@@ -45,7 +45,7 @@ pageextension 50002 "General Journal Templates ext" extends "General Journal Tem
     var
         GenJnlTemplate: Record "Gen. Journal Template";
     begin
-        GenJnlTemplate.SetRange("Habilitado fact. pdtes recibir", true);
+        GenJnlTemplate.SetRange("FPR Activado", true);
         CurrPage.Update();
         if GenJnlTemplate.Findfirst() then
             funcionFactPendRecibirActiva := true
@@ -60,7 +60,7 @@ pageextension 50002 "General Journal Templates ext" extends "General Journal Tem
         GenJnlTemplate: Record "Gen. Journal Template";
     begin
         GenJnlTemplate.Reset();
-        GenJnlTemplate.SetRange("Habilitado fact. pdtes recibir", true);
+        GenJnlTemplate.SetRange("FPR Activado", true);
         if GenJnlTemplate.FindFirst() then begin
             Confirmacion := Confirm(MessageConf, true);
             if Confirmacion then

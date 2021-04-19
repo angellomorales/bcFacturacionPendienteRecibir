@@ -14,7 +14,7 @@ pageextension 50000 "General Posting Setup ext" extends "General Posting Setup"
                 ApplicationArea = All;
                 ToolTip = 'Especifica el número de la cuenta contable para registrar transacciones de compra que están pendientes de recibir de pedidos ya recibidos con esta combinación específica de grupo contable de negocio y grupo contable de producto.';
             }
-            field("Activar recibos pdte. fact."; Rec."Activar recibos pdte. fact.")
+            field("Activar FPR"; Rec."Activar FPR")
             {
                 ApplicationArea = All;
                 Caption = 'Activar función FPR';
@@ -22,7 +22,7 @@ pageextension 50000 "General Posting Setup ext" extends "General Posting Setup"
                 Editable = funcionFactPendRecibirActiva;
                 trigger OnValidate()
                 begin
-                    if (Rec."Activar recibos pdte. fact.") then
+                    if (Rec."Activar FPR") then
                         Message(MensajeInicio());
                 end;
             }
@@ -71,7 +71,7 @@ pageextension 50000 "General Posting Setup ext" extends "General Posting Setup"
         if funcionFactPendRecibirActiva then
             Ok := false;
         GenPostSetup.Reset();
-        GenPostSetup.SetRange("Activar recibos pdte. fact.", true);
+        GenPostSetup.SetRange("Activar FPR", true);
         if GenPostSetup.FindSet() then
             repeat
                 if (GenPostSetup."Purch. Account" = '')
@@ -93,17 +93,17 @@ pageextension 50000 "General Posting Setup ext" extends "General Posting Setup"
         GenPostSetup: Record "General Posting Setup";
     begin
         GenJnlTemplate.Reset();
-        GenJnlTemplate.SetRange("Habilitado fact. pdtes recibir", true);
+        GenJnlTemplate.SetRange("FPR Activado", true);
         CurrPage.Update();
         if GenJnlTemplate.FindFirst() then
             funcionFactPendRecibirActiva := true
         else begin
             funcionFactPendRecibirActiva := false;
             GenPostSetup.Reset();
-            GenPostSetup.SetRange("Activar recibos pdte. fact.", true);
+            GenPostSetup.SetRange("Activar FPR", true);
             if GenPostSetup.FindSet() then
                 repeat
-                    GenPostSetup."Activar recibos pdte. fact." := false;
+                    GenPostSetup."Activar FPR" := false;
                     GenPostSetup.Modify();
                 until GenPostSetup.Next() = 0;
         end;

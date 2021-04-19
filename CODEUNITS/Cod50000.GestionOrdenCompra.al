@@ -23,7 +23,7 @@ codeunit 50000 "Gestion Orden de Compra"
         Contrapartida: Code[20];
         Numdoc: Code[20];
     begin
-        GenJnlBatch.SetRange("Habilitar fact. pdtes recibir", true);
+        GenJnlBatch.SetRange("Activar FPR", true);
         if GenJnlBatch.FindFirst() then begin
             if not validarCuentaActiva(PurchaseLine) then
                 exit;
@@ -80,7 +80,7 @@ codeunit 50000 "Gestion Orden de Compra"
         erroMsg2: Label 'verifique que se encuentra seleccionada la casilla Habilitar para fact. pdtes recibir en las seccion de libros diario general';
     begin
         status := false;
-        GenJnlBatch.SetRange("Habilitar fact. pdtes recibir", true);
+        GenJnlBatch.SetRange("Activar FPR", true);
         if GenJnlBatch.FindFirst() then begin
             if GenJnlBatch."No. Series" <> '' then begin
                 if ValidarConfiguracionCuentasRegistroGeneral(PurchaseLine) then
@@ -103,7 +103,7 @@ codeunit 50000 "Gestion Orden de Compra"
         GenPostSetup.SetRange("Gen. Bus. Posting Group", PurchaseLine."Gen. Bus. Posting Group");
         GenPostSetup.SetRange("Gen. Prod. Posting Group", PurchaseLine."Gen. Prod. Posting Group");
         if GenPostSetup.FindFirst() then
-            if GenPostSetup."Activar recibos pdte. fact." = true then begin
+            if GenPostSetup."Activar FPR" = true then begin
                 if (GenPostSetup."Purch. Account" <> '')
                 and (GenPostSetup."Cta. compra pdtes recibir" <> '')
                 and (GenPostSetup."Cta. facturas pdtes recibir" <> '')
@@ -124,7 +124,7 @@ codeunit 50000 "Gestion Orden de Compra"
         GenPostSetup.SetRange("Gen. Bus. Posting Group", PurchaseLine."Gen. Bus. Posting Group");
         GenPostSetup.SetRange("Gen. Prod. Posting Group", PurchaseLine."Gen. Prod. Posting Group");
         if GenPostSetup.FindFirst() then
-            if GenPostSetup."Activar recibos pdte. fact." = true then
+            if GenPostSetup."Activar FPR" = true then
                 status := true;
         exit(status);
     end;

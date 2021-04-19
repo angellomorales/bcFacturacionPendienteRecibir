@@ -4,7 +4,7 @@ pageextension 50001 "General Journal Batches ext" extends "General Journal Batch
     {
         addafter("Copy to Posted Jnl. Lines")
         {
-            field("Habilitar para fact. pdtes recibir"; Rec."Habilitar fact. pdtes recibir")
+            field("Activar FPR"; Rec."Activar FPR")
             {
                 ApplicationArea = All;
                 Caption = 'Activar Función FPR para esta sección';
@@ -19,26 +19,26 @@ pageextension 50001 "General Journal Batches ext" extends "General Journal Batch
                     //validacion para que solo sea un campo chequeado
                     GenJnlBatch.Reset();
                     GenJnlBatch.SetFilter("Journal Template Name", '<>%1', Rec."Journal Template Name");
-                    GenJnlBatch.SetRange("Habilitar fact. pdtes recibir", true);
+                    GenJnlBatch.SetRange("Activar FPR", true);
                     if GenJnlBatch.FindFirst() then
                         Error(Errortxt)
                     else begin
                         GenJnlBatch.Reset();
                         GenJnlBatch.SetFilter(Name, '<>%1', Rec.Name);
-                        GenJnlBatch.SetRange("Habilitar fact. pdtes recibir", true);
+                        GenJnlBatch.SetRange("Activar FPR", true);
                         if GenJnlBatch.FindFirst() then
                             Error(Errortxt);
                     end;
-                    if Rec."Habilitar fact. pdtes recibir" = true then
+                    if Rec."Activar FPR" = true then
                         if rec."No. Series" = '' then begin
                             MensajeConfirmacion();
-                            Rec."Habilitar fact. pdtes recibir" := false;
+                            Rec."Activar FPR" := false;
                         end;
                     GenJnlTemplate.Reset();
                     GenJnlTemplate.Get(Rec."Journal Template Name");
-                    GenJnlTemplate."Habilitado fact. pdtes recibir" := Rec."Habilitar fact. pdtes recibir";
+                    GenJnlTemplate."FPR Activado" := Rec."Activar FPR";
                     GenJnlTemplate.Modify(true);
-                    if Rec."Habilitar fact. pdtes recibir" = true then
+                    if Rec."Activar FPR" = true then
                         GenPagTemplate.AbrirConfigCuentas();
                 end;
             }
