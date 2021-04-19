@@ -7,6 +7,7 @@ pageextension 50001 "General Journal Batches ext" extends "General Journal Batch
             field("Habilitar para fact. pdtes recibir"; Rec."Habilitar fact. pdtes recibir")
             {
                 ApplicationArea = All;
+                Caption = 'Activar Función FPR para esta sección';
                 ToolTip = 'Especifica si la seccion de diario seleccionada se utilizara como seccion para realizar acientos contables para facturas pendientes de recibir de pedidos ya recibidos.';
                 trigger OnValidate()
                 var

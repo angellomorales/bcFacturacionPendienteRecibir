@@ -17,8 +17,8 @@ pageextension 50000 "General Posting Setup ext" extends "General Posting Setup"
             field("Activar recibos pdte. fact."; Rec."Activar recibos pdte. fact.")
             {
                 ApplicationArea = All;
-                Caption = ' Activar funcion de registra recibos pendientes por facturar';
-                ToolTip = 'Activar funcion registrar facturas pendientes en cuenta contable para la combinación específica de grupo contable de negocio y grupo contable de producto. ';
+                Caption = 'Activar función FPR';
+                ToolTip = 'Activar función registrar facturas pendientes en cuenta contable para la combinación específica de grupo contable de negocio y grupo contable de producto. ';
                 Editable = funcionFactPendRecibirActiva;
                 trigger OnValidate()
                 begin
@@ -31,7 +31,7 @@ pageextension 50000 "General Posting Setup ext" extends "General Posting Setup"
         {
             field(funcionFactPendRecibirActiva; funcionFactPendRecibirActiva)
             {
-                Caption = 'Función recibos pdtes. facturar activada en sección de libros';
+                Caption = 'Función FPR Activada';
                 ToolTip = 'Especifica si esta habilitada la funcion para realizar acientos contables para facturas pendientes de recibir de pedidos ya recibidos.';
                 ApplicationArea = All;
                 Editable = false;
