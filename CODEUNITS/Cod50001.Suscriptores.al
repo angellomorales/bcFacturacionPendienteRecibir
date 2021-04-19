@@ -31,11 +31,11 @@ codeunit 50001 Suscriptores
         NextEntryNo := 0;
     end;
 
-    [EventSubscriber(ObjectType::Page, Page::"General Journal Batches", 'OnModifyRecordEvent', '', false, false)]
-    local procedure OnModifyRecordEvent()
-    var
-        GenPagTemplate: Page "General Journal Templates";
-    begin
-        GenPagTemplate.Run();
-    end;
+    // [EventSubscriber(ObjectType::Page, Page::"General Journal Batches", 'OnModifyRecordEvent', '', false, false)]
+    // local procedure OnModifyRecordEvent()
+    // var
+    //     GenPagTemplate: Page "General Journal Templates";
+    // begin
+    //     GenPagTemplate.Activate();
+    // end;
 }
