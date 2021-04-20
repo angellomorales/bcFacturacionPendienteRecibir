@@ -27,6 +27,7 @@ codeunit 50000 "Gestion Orden de Compra"
         if GenJnlBatch.FindFirst() then begin
             if not validarCuentaActiva(PurchaseLine) then
                 exit;
+            EliminarDiario(GenJnlBatch);
             ObtenerCuentaYContrapartida(PurchaseLine, Cuenta, Contrapartida);
             GenJnlLine.Init();
             GenJnlLine."Posting Date" := WorkDate();
@@ -137,5 +138,14 @@ codeunit 50000 "Gestion Orden de Compra"
         if PurchHeader."Vendor Invoice No." <> '' then
             if PurchHeader.FindPostedDocumentWithSameExternalDocNo(VendLedgEntry, PurchHeader."Vendor Invoice No.") then
                 Error(erroMsg, VendLedgEntry."Document Type", VendLedgEntry."External Document No.");
+    end;
+
+    local procedure EliminarDiario(GenJnlBatch: Record "Gen. Journal Batch"): Boolean
+    var
+        GenJnlLine: Record "Gen. Journal Line";
+    begin
+        GenJnlLine.SetRange("Journal Template Name", GenJnlBatch."Journal Template Name");
+        GenJnlLine.SetRange("Journal Batch Name", GenJnlBatch.Name);
+        GenJnlLine.DeleteAll();
     end;
 }
