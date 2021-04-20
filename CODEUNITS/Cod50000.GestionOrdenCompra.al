@@ -23,8 +23,7 @@ codeunit 50000 "Gestion Orden de Compra"
         Contrapartida: Code[20];
         Numdoc: Code[20];
     begin
-        GenJnlBatch.SetRange("Activar FPR", true);
-        if GenJnlBatch.FindFirst() then begin
+        if ValidarActivacion(GenJnlBatch) then begin
             if not validarCuentaActiva(PurchaseLine) then
                 exit;
             EliminarDiario(GenJnlBatch);
@@ -155,6 +154,7 @@ codeunit 50000 "Gestion Orden de Compra"
         Errortxt: label 'No se puede realizar cambios de configuración ya que el pedido %1 se encuentra recibido y pendiente de facturar';
     begin
         PurchLine.SetFilter("Quantity Received", '>0');
+        PurchLine.SetFilter("Document No.", '>106028');
         if PurchLine.FindSet() then
             repeat
                 if PurchLine."Quantity Received" <> PurchLine."Quantity Invoiced" then begin
@@ -164,5 +164,35 @@ codeunit 50000 "Gestion Orden de Compra"
             until PurchLine.Next() = 0;
         if Rec then
             Message(MessageActivacion);
+    end;
+
+    local procedure ValidarActivacion(var GenJnlBatch: Record "Gen. Journal Batch"): Boolean
+    var
+        GnLedgSetup: Record "General Ledger Setup";
+        GnLedgSetupOk: Boolean;
+        GenJnlBatchOk: Boolean;
+        ErrorTxt: label 'verifique que se encuentre activa la FPR en: %1';
+    begin
+        GnLedgSetupOk := false;
+        GenJnlBatchOk := false;
+
+        GenJnlBatch.SetRange("Activar FPR", true);
+        if GenJnlBatch.FindFirst() then
+            GenJnlBatchOk := true;
+
+        GnLedgSetup.SetRange("Activar FPR", true);
+        if GnLedgSetup.FindFirst() then
+            GnLedgSetupOk := true;
+
+        if GenJnlBatchOk and GnLedgSetupOk then
+            exit(true)
+        else begin
+            if GenJnlBatchOk then
+                Error(ErrorTxt, 'Configuración Contabilidad');
+            if GnLedgSetupOk then
+                Error(ErrorTxt, 'Configuración sección libros diario general')
+        end;
+
+        exit(false);
     end;
 }
