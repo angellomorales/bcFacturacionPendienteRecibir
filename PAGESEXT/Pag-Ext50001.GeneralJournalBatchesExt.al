@@ -12,9 +12,11 @@ pageextension 50001 "General Journal Batches ext" extends "General Journal Batch
                 trigger OnValidate()
                 var
                     Errortxt: label 'Solo puede existir una seccion habilitada para facturas pendientes';
+                    MessageActivacion: label 'Recuerde que debe activar la funcion FPR en la configuración de contabilidad';
                     GenJnlBatch: Record "Gen. Journal Batch";
                     GenJnlTemplate: Record "Gen. Journal Template";
                     GenPagTemplate: Page "General Journal Templates";
+                    GestionOrdenCompra: Codeunit "Gestion Orden de Compra";
                 begin
                     //validacion para que solo sea un campo chequeado
                     GenJnlBatch.Reset();
@@ -34,6 +36,7 @@ pageextension 50001 "General Journal Batches ext" extends "General Journal Batch
                             MensajeConfirmacion();
                             Rec."Activar FPR" := false;
                         end;
+                    GestionOrdenCompra.PermitirCambiarConfiguracion(rec."Activar FPR", MessageActivacion);
                     GenJnlTemplate.Reset();
                     GenJnlTemplate.Get(Rec."Journal Template Name");
                     GenJnlTemplate."FPR Activado" := Rec."Activar FPR";

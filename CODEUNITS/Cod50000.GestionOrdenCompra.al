@@ -148,4 +148,21 @@ codeunit 50000 "Gestion Orden de Compra"
         GenJnlLine.SetRange("Journal Batch Name", GenJnlBatch.Name);
         GenJnlLine.DeleteAll();
     end;
+
+    procedure PermitirCambiarConfiguracion(Rec: Boolean; MessageActivacion: Text[300])
+    var
+        PurchLine: Record "Purchase Line";
+        Errortxt: label 'No se puede realizar cambios de configuración ya que el pedido %1 se encuentra recibido y pendiente de facturar';
+    begin
+        PurchLine.SetFilter("Quantity Received", '>0');
+        if PurchLine.FindSet() then
+            repeat
+                if PurchLine."Quantity Received" <> PurchLine."Quantity Invoiced" then begin
+                    Error(Errortxt, PurchLine."Document No.");
+                    exit;
+                end;
+            until PurchLine.Next() = 0;
+        if Rec then
+            Message(MessageActivacion);
+    end;
 }
