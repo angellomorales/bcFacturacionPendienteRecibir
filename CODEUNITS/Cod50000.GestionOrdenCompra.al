@@ -154,7 +154,7 @@ codeunit 50000 "Gestion Orden de Compra"
         Errortxt: label 'No se puede realizar cambios de configuración ya que el pedido %1 se encuentra recibido y pendiente de facturar';
     begin
         PurchLine.SetFilter("Quantity Received", '>0');
-        PurchLine.SetFilter("Document No.", '>106028');
+        // PurchLine.SetFilter("Document No.", '>106028');
         if PurchLine.FindSet() then
             repeat
                 if PurchLine."Quantity Received" <> PurchLine."Quantity Invoiced" then begin
